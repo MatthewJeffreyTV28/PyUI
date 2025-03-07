@@ -2,7 +2,7 @@ import pygame
 
 class Window:
 
-    def __init__(self, title="Test App", colorRGB=False):
+    def __init__(self, title="Wack-A-Mole", colorRGB=False):
         pygame.init()
         self.screen = pygame.display.set_mode((800, 600))
         pygame.display.set_caption(title)

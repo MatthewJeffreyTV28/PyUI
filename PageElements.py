@@ -2,10 +2,11 @@ from pygame import Rect
 import pygame
 from os import getcwd
 from math import floor
+from pygame import draw
 
 class PageElement:
     def __init__(self, topLeftLoc, width, height, colorRGB=(255,255,255)):
-        self.rect = Rect(topLeftLoc[0], topLeftLoc[1], width, height)
+        self.rect = Rect(((topLeftLoc[0] - (width/2))), ((topLeftLoc[1] - (height / 2))), width, height)
         self.color = colorRGB
 
     def wasClicked(self, clickLoc):
@@ -91,3 +92,39 @@ class Label(PageElement):
 
         
     
+class HexTile(PageElement):
+    def __init__(self, topLeftLoc, width, height, color, gameScreen, id):
+        super().__init__(topLeftLoc, width * 2, height * 2, color) 
+        self.topLeftLoc = topLeftLoc
+        self.width = width
+        self.height = height
+        self.color = color
+        self.gameScreen = gameScreen
+        self.id = id
+        self.points = [
+            (topLeftLoc[0], topLeftLoc[1]),
+            (topLeftLoc[0] + width, topLeftLoc[1]),
+            (topLeftLoc[0] + (width * 1.5), topLeftLoc[1] + (height / 2)),
+            (topLeftLoc[0] + width, topLeftLoc[1] + height),
+            (topLeftLoc[0], topLeftLoc[1] + height),
+            (topLeftLoc[0] - (width / 2), topLeftLoc[1] + (height / 2))
+        ]
+
+    def wasClicked(self, clickLoc):
+        if self.rect.collidepoint(clickLoc[0], clickLoc[1]):
+            return True
+        return False
+
+    def display(self, surface):
+        draw.polygon(surface, self.color, self.points)
+
+    def onClick(self, clickLoc):
+        print("You've clicked a hexagon")
+        hex = self.gameScreen.elements.pop(self.id)
+        hex.color = (0, 255, 0)
+        self.gameScreen.elements.insert(self.id, hex)
+        self.gameScreen.elements.append(Label((0, 0), 100, 50, "Clicked", 20, (0, 0, 0)))
+
+
+
+#TODO shape drawer, normal x, y graph
